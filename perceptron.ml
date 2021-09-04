@@ -1,3 +1,53 @@
+(*
+init:
+  w={R:0, G:0, B:0}
+
+----
+x={R:0, G:255, B:255}, y=-1
+
+check:
+  w={R:0, G:0, B:0},
+  x={R:0, G:255, B:255},
+  y=-1
+    R: w.R=0, x.R=0, w*x=0
+    G: w.G=0, x.G=255, w*x=0
+    B: w.B=0, x.B=255, w*x=0
+  result => 1 (1 != 1: need to update)
+
+update:
+  w={R:0, G:0, B:0},
+  x={R:0, G:255, B:255},
+  y=-1
+    R: w.R=0, x.R=0, w+(x*y)=0
+      w={R:0, G:0, B:0}
+    G: w.G=0, x.G=255, w+(x*y)=-255
+      w={R:0, G:-255, B:0}
+    B: w.B=0, x.B=255, w+(x*y)=-255
+      w={R:0, G:-255, B:-255}
+
+----
+x={R:255, G:0, B:255}, y=1
+
+check:
+  w={R:0, G:-255, B:-255},
+  x={R:255, G:0, B:255},
+  y=1
+    R: w.R=0, x.R=255, w*x=0
+    G: w.G=-255, x.G=0, w*x=0
+    B: w.B=-255, x.B=255, w*x=-65025
+  result => -1 (-1 != 1: need to update)
+
+update:
+  w={R:0, G:-255, B:-255},
+  x={R:255, G:0, B:255},
+  y=1
+    R: w.R=0, x.R=255, w+(x*y)=255
+      w={R:255, G:-255, B:-255}
+    G: w.G=-255, x.G=0, w+(x*y)=-255
+      w={R:255, G:-255, B:-255}
+    B: w.B=-255, x.B=255, w+(x*y)=0
+      w={R:255, G:-255, B:0}
+*)
 let ($) f g = f g
 
 let print x =
@@ -22,3 +72,4 @@ let learn_all n w set_of_x_y =
     List.iter (fun (x, y) -> learn w x y) set_of_x_y 
   done;
   w
+
